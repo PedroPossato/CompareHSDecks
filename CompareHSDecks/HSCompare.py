@@ -1,26 +1,19 @@
 import urllib
-import sys
+import requests
 
-def getPage(url):
-    try:
-        return urllib.urlopen(url).readlines()
-    except:
-        print "Erro ao abrir o url"
+response = requests.get(raw_input("\nInsira link, por favor: ")).text.split("\n")
 
-link = raw_input("\nInsira link, por favor: ")
-response = getPage(link)
 listaDeNomes = []
-listaDeValores = int
 listaDeValores = []
 conta = 0
 count = 0
 
-for i in range(len(response)):
-    if "Dust Cost:" in response[i]:
-        count+=1
-    if '<span class="card-name">' in response[i]:
-        nome = response[i].split('span class="card-name">')[1].split("</span")[0]
-        valor = int (response[i].split('span class="card-count">')[1].split('</span>')[0])
+for r in response:
+    if "Dust Cost:" in r:
+        count += 1
+    if '<span class="card-name">' in r:
+        nome = r.split('span class="card-name">')[1].split("</span")[0]
+        valor = int (r.split('span class="card-count">')[1].split('</span>')[0])
         if nome not in listaDeNomes:
             conta+=1
             listaDeNomes.append(nome)
@@ -28,7 +21,7 @@ for i in range(len(response)):
         else:
             listaDeValores[listaDeNomes.index(nome)] += valor
 
-print ""
-
 for j in range(conta):
     print listaDeNomes[j],'-',(listaDeValores[j]/(count*1.0))
+
+print ""
